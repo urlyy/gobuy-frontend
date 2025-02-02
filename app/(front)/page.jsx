@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import SearchInput from '@/components/SearchInput';
 import { Header } from '@/components/header'
 
+
 const products = [
   {
     id: 1,
@@ -51,6 +52,7 @@ const products = [
     color: 'Navy',
   }
 ];
+
 
 export default function Home() {
   return (

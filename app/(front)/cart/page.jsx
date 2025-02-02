@@ -71,9 +71,9 @@ export default function Cart() {
         </TableBody>
       </Table>
       <div className="mt-6 flex justify-between items-center">
-        <p className="text-xl font-semibold">Total: ${total.toFixed(2)}</p>
-        <Link href="/checkout">
-          <Button>Proceed to Checkout</Button>
+        <p className="text-xl font-semibold">总价: ${total.toFixed(2)}</p>
+        <Link href="/orderSettlement">
+          <Button>提交订单</Button>
         </Link>
       </div>
     </div>

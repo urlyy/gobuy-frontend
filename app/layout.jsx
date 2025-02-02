@@ -9,6 +9,7 @@ export const metadata = {
   description: 'A simple e-commerce application using shadcn/ui',
 }
 
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
