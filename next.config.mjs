@@ -1,6 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     transpilePackages: ['msw'],
+    // api: {
+    //     bodyParser: {
+    //       sizeLimit: '5mb'
+    //     }
+    // }
+    images: {
+      remotePatterns: [
+        {
+          protocol: "http",
+          hostname: "**",
+        },
+      ],
+    },
 };
 
-export default nextConfig;
+export default nextConfig

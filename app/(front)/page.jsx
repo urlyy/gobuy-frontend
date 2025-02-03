@@ -3,7 +3,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import SearchInput from '@/components/SearchInput';
 import { Header } from '@/components/header'
-
+import ImageUploader from '@/components/imageUploader';
 
 const products = [
   {
@@ -62,6 +62,7 @@ export default function Home() {
           {/* <h1 className="text-3xl font-bold mb-6">Products</h1> */}
           <SearchInput />
         </div>
+        <ImageUploader/>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {products.map((product) => (
             <Card key={product.id}>
