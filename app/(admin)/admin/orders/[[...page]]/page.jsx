@@ -1,6 +1,3 @@
-'use client'
-
-import { useState } from 'react'
 import Link from 'next/link'
 import { Eye } from 'lucide-react'
 import { Button } from "@/components/ui/button"
@@ -8,38 +5,35 @@ import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import Pagination from '@/components/pagination'
+import apiClient from '@/lib/apiClient'
+import { computeStatus } from '@/lib/orderStatus'
 
-// 模拟订单数据
-const mockOrders = Array(20).fill().map((_, i) => ({
-  id: `ORD-${1000 + i}`,
-  customer: `Customer ${i + 1}`,
-  date: new Date(2023, 0, 1 + i).toLocaleDateString(),
-  total: (Math.random() * 500 + 50).toFixed(2),
-  status: ['Pending', 'Processing', 'Shipped', 'Delivered'][Math.floor(Math.random() * 4)]
-}))
 
-export default function OrderManagement() {
-  const [orders, setOrders] = useState(mockOrders)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [statusFilter, setStatusFilter] = useState('')
+export default async({searchParams,params})=> {
+  // const [searchTerm, setSearchTerm] = useState('')
+  // const [statusFilter, setStatusFilter] = useState('')
+  // const [currentPage, setCurrentPage] = useState(1)
+  const ordersPerPage = 10;
+  const {page="1"} = await params;
+  const currentPage = Number(page);
 
-  const filteredOrders = orders.filter(order => 
-    (order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-     order.customer.toLowerCase().includes(searchTerm.toLowerCase())) &&
-    (statusFilter === '' || order.status === statusFilter)
-  )
+  const res = await apiClient.get("/admin/order/list",{page:currentPage,size:ordersPerPage} );
+  const {orders,total_count} = res.data;
+  console.log(total_count)
+  const totalPage = Math.ceil(total_count / ordersPerPage);
 
   return (
     <div>
       <h2 className="text-2xl font-bold mb-4">订单管理</h2>
       <div className="flex gap-4 mb-4">
-        <Input
+        {/* <Input
           placeholder="Search orders..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="max-w-sm"
-        />
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
+        /> */}
+        {/* <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
@@ -50,40 +44,40 @@ export default function OrderManagement() {
             <SelectItem value="Shipped">Shipped</SelectItem>
             <SelectItem value="Delivered">Delivered</SelectItem>
           </SelectContent>
-        </Select>
+        </Select> */}
       </div>
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Order ID</TableHead>
-            <TableHead>Customer</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead>Total</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Action</TableHead>
+            <TableHead>订单号</TableHead>
+            <TableHead>客户名</TableHead>
+            <TableHead>创建时间</TableHead>
+            <TableHead>总价</TableHead>
+            <TableHead>状态</TableHead>
+            <TableHead>操作</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredOrders.map((order) => (
+          {orders.map((order) => (
             <TableRow key={order.id}>
-              <TableCell>{order.id}</TableCell>
+              <TableCell>{order.number}</TableCell>
               <TableCell>{order.customer}</TableCell>
-              <TableCell>{order.date}</TableCell>
-              <TableCell>${order.total}</TableCell>
+              <TableCell>{order.created_at}</TableCell>
+              <TableCell>￥{order.total_price}</TableCell>
               <TableCell>
                 <Badge variant={
                   order.status === 'Delivered' ? 'default' :
                   order.status === 'Shipped' ? 'secondary' :
                   order.status === 'Processing' ? 'primary' : 'destructive'
                 }>
-                  {order.status}
+                  {computeStatus(order.status)}
                 </Badge>
               </TableCell>
               <TableCell>
                 <Link href={`/orders/${order.id}`}>
                   <Button variant="ghost" size="sm">
                     <Eye className="mr-2 h-4 w-4" />
-                    View
+                    查看详情
                   </Button>
                 </Link>
               </TableCell>
@@ -91,6 +85,7 @@ export default function OrderManagement() {
           ))}
         </TableBody>
       </Table>
+      <Pagination hrefPrefix={'/admin/orders'} currentPage={currentPage} pageSize={ordersPerPage} totalPage={totalPage}/>
     </div>
   )
 }

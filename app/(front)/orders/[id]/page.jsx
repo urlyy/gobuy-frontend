@@ -7,95 +7,83 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
+import apiClient from '@/lib/apiClient'
+import { computeStatus } from '@/lib/orderStatus'
 
-// 模拟订单详情数据
-const mockOrderDetails = {
-  id: 'ORD-1001',
-  customer: 'John Doe',
-  email: 'john@example.com',
-  date: '2023-01-01',
-  total: 299.99,
-  status: 'Processing',
-  items: [
-    { id: 1, name: 'Product 1', quantity: 2, price: 99.99 },
-    { id: 2, name: 'Product 2', quantity: 1, price: 100.01 },
-  ],
-  shippingAddress: '123 Main St, City, Country, 12345',
-  paymentMethod: 'Credit Card'
-}
-
-export default function OrderDetails() {
+export default function OrderDetail() {
   const router = useRouter()
   const { id } = useParams()
   const [order, setOrder] = useState(null)
 
   useEffect(() => {
-    // 在实际应用中，这里应该从API获取订单详情
-    setOrder({ ...mockOrderDetails, id })
+    const init = async()=>{
+      const res = await apiClient.get(`/order/${id}`);
+      const order = res.data.order;
+      setOrder({ ...order})
+    }
+    init();
   }, [id])
+
+  
 
   if (!order) {
     return <div>Loading...</div>
   }
-
   return (
     <div>
       <Button variant="ghost" onClick={() => router.back()} className="mb-4">
         <ArrowLeft className="mr-2 h-4 w-4" />
-        返回
+        查看所有订单
       </Button>
       <Card>
         <CardHeader>
-          <CardTitle>订单详情 - {order.id}</CardTitle>
-          <CardDescription>View and manage order information</CardDescription>
+          <CardTitle>订单详情</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <h3 className="font-semibold mb-2">Customer Information</h3>
-              <p>Name: {order.customer}</p>
-              <p>Email: {order.email}</p>
+              <h3 className="font-semibold mb-2">订单信息</h3>
+              <div>订单号: {order.number}</div>
+              <div>创建日期: {order.created_at}</div>
+              <div>总价: ￥{order.total_price.toFixed(2)}</div>
+              <div>状态: <Badge>{computeStatus(order.status)}</Badge></div>
+              {order.status === 2 && <div>支付方式: 支付宝</div>}
             </div>
-            <div>
-              <h3 className="font-semibold mb-2">Order Information</h3>
-              <p>Date: {order.date}</p>
-              <p>Total: ${order.total.toFixed(2)}</p>
-              <p>Status: <Badge>{order.status}</Badge></p>
-            </div>
+            {<div>
+              <h3 className="font-semibold mb-2">快递信息</h3>
+              <div>地址: TODO</div>
+              <div>姓名: TODO</div>
+              <div>电话: TODO</div>
+            </div>}
           </div>
           <div className="mt-4">
-            <h3 className="font-semibold mb-2">Order Items</h3>
+            <h3 className="font-semibold mb-2">订单项</h3>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Product</TableHead>
-                  <TableHead>Quantity</TableHead>
-                  <TableHead>Price</TableHead>
-                  <TableHead>Total</TableHead>
+                  <TableHead>商品名</TableHead>
+                  <TableHead>图片</TableHead>
+                  <TableHead>单价</TableHead>
+                  <TableHead>数量</TableHead>
+                  <TableHead>总价</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {order.items.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell>{item.name}</TableCell>
+                {order.items.map((item,idx) => (
+                  <TableRow key={idx}>
+                    <TableCell>{item.product_name}</TableCell>
+                    <TableCell>
+                      <img className='h-10 w-10' src={item.product_image}></img>
+                    </TableCell>
+                    <TableCell>￥{item.price.toFixed(2)}</TableCell>
                     <TableCell>{item.quantity}</TableCell>
-                    <TableCell>${item.price.toFixed(2)}</TableCell>
-                    <TableCell>${(item.quantity * item.price).toFixed(2)}</TableCell>
+                    <TableCell>￥{(item.quantity * item.price).toFixed(2)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </div>
-          <div className="mt-4 grid gap-4 md:grid-cols-2">
-            <div>
-              <h3 className="font-semibold mb-2">Shipping Address</h3>
-              <p>{order.shippingAddress}</p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-2">Payment Method</h3>
-              <p>{order.paymentMethod}</p>
-            </div>
-          </div>
+          
         </CardContent>
       </Card>
     </div>
