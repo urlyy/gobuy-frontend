@@ -1,7 +1,3 @@
-'use client'
-
-import { useState, useEffect } from 'react'
-import { useParams, useRouter } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -9,21 +5,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge"
 import apiClient from '@/lib/apiClient'
 import { computeStatus } from '@/lib/orderStatus'
+import Link from 'next/link'
+import PayButton from './payButton'
 
-export default function OrderDetail() {
-  const router = useRouter()
-  const { id } = useParams()
-  const [order, setOrder] = useState(null)
-
-  useEffect(() => {
-    const init = async()=>{
-      const res = await apiClient.get(`/order/${id}`);
-      const order = res.data.order;
-      setOrder({ ...order})
-    }
-    init();
-  }, [id])
-
+export default  async({ params })=> {
+  const { id } = await params
+  const res = await apiClient.get(`/order/${id}`);
+  const order = res.data.order;
   
 
   if (!order) {
@@ -31,10 +19,12 @@ export default function OrderDetail() {
   }
   return (
     <div>
-      <Button variant="ghost" onClick={() => router.back()} className="mb-4">
-        <ArrowLeft className="mr-2 h-4 w-4" />
-        查看所有订单
-      </Button>
+      <Link href="/orders">
+        <Button variant="ghost" className="mb-4">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          查看所有订单
+        </Button>
+      </Link>
       <Card>
         <CardHeader>
           <CardTitle>订单详情</CardTitle>
@@ -46,7 +36,11 @@ export default function OrderDetail() {
               <div>订单号: {order.number}</div>
               <div>创建日期: {order.created_at}</div>
               <div>总价: ￥{order.total_price.toFixed(2)}</div>
-              <div>状态: <Badge>{computeStatus(order.status)}</Badge></div>
+              <div>状态: <Badge variant={
+                  order.status === 'Delivered' ? 'default' :
+                  order.status === 'Shipped' ? 'secondary' :
+                  order.status === 1 ? 'success' : 'destructive'
+                }>{computeStatus(order.status)}</Badge></div>
               {order.status === 2 && <div>支付方式: 支付宝</div>}
             </div>
             {<div>
@@ -83,7 +77,9 @@ export default function OrderDetail() {
               </TableBody>
             </Table>
           </div>
-          
+          {order.status === 0 && <div className='flex justify-center'>
+            <PayButton orderID={order.id}>支付</PayButton>
+          </div>}
         </CardContent>
       </Card>
     </div>

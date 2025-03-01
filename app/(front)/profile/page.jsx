@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 
 export default function Profile() {
   const [user, setUser] = useState({
-    name: 'John Doe',
+    name: localStorage.getItem('username'),
     email: 'john@example.com',
   })
 
@@ -20,11 +20,11 @@ export default function Profile() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-6">User Profile</h1>
+      <h1 className="text-3xl font-bold mb-6">用户中心</h1>
       <Card>
         <CardHeader>
-          <CardTitle>Profile Information</CardTitle>
-          <CardDescription>Update your profile details</CardDescription>
+          <CardTitle>修改信息</CardTitle>
+          <CardDescription></CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit}>
@@ -37,7 +37,7 @@ export default function Profile() {
                   onChange={(e) => setUser({ ...user, name: e.target.value })}
                 />
               </div>
-              <div className="flex flex-col space-y-1.5">
+              {/* <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="email">Email</Label>
                 <Input 
                   id="email" 
@@ -45,10 +45,10 @@ export default function Profile() {
                   value={user.email}
                   onChange={(e) => setUser({ ...user, email: e.target.value })}
                 />
-              </div>
+              </div> */}
             </div>
             <CardFooter className="mt-6">
-              <Button type="submit">Update Profile</Button>
+              <Button type="submit">提交修改</Button>
             </CardFooter>
           </form>
         </CardContent>

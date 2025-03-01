@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import uploadImage from "../lib/uploadImage"
 
-export default  ()=> {
-  const [imageUrl, setImageUrl] = useState(null)
+export default  ({setImageUrl})=> {
+  
   const [isUploading, setIsUploading] = useState(false)
   const fileInputRef = useRef(null)
 
@@ -42,19 +42,11 @@ export default  ()=> {
   }
 
   return (
-    <div className="flex flex-col items-center space-y-4">
+    <div className="flex space-y-4">
       <Button onClick={handleClick} disabled={isUploading}>
         {isUploading ? "Uploading..." : "Upload Image"}
       </Button>
       <input type="file" ref={fileInputRef} onChange={handleUpload} accept="image/*" className="hidden" />
-      {imageUrl && (
-        <>
-        <div>{imageUrl}</div>
-        <div className="mt-4">
-          <Image src={imageUrl || "/placeholder.svg"} alt="Uploaded image" width={200} height={200} />
-        </div>
-        </>
-      )}
     </div>
   )
 }

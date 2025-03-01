@@ -68,13 +68,13 @@ export default async({searchParams,params})=> {
                 <Badge variant={
                   order.status === 'Delivered' ? 'default' :
                   order.status === 'Shipped' ? 'secondary' :
-                  order.status === 'Processing' ? 'primary' : 'destructive'
+                  order.status === 1 ? 'success' : 'destructive'
                 }>
                   {computeStatus(order.status)}
                 </Badge>
               </TableCell>
               <TableCell>
-                <Link href={`/orders/${order.id}`}>
+                <Link href={`/orders/${order.id}`} target="_blank">
                   <Button variant="ghost" size="sm">
                     <Eye className="mr-2 h-4 w-4" />
                     查看详情

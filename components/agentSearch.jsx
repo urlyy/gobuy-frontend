@@ -1,10 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { performQuery } from "@/components/action"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Link from "next/link"
+import {handleAskAgent} from "./action"
 
 export default ()=> {
   const [isExpanded, setIsExpanded] = useState(false)
@@ -12,15 +12,16 @@ export default ()=> {
   const [result, setResult] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
 
+
   const handleQuery = async () => {
     setResult(null);
     setIsLoading(true)
     try {
-      const queryResult = await performQuery(query)
-      setResult({ text: queryResult.text, productID: queryResult.productID })
+      const queryResult = await handleAskAgent(query);
+      setResult({ html: queryResult.html })
     } catch (error) {
       console.error("Query failed:", error)
-      setResult({ text: "查询失败，请重试。" })
+      setResult({ html: "<div>查询失败，请重试。</div>" })
     } finally {
       setIsLoading(false)
     }
@@ -52,7 +53,8 @@ export default ()=> {
           </Button>
           {result && (
             <div className="mt-4 p-2 bg-gray-100 rounded">
-              <p>{result.text}</p>
+              <div dangerouslySetInnerHTML={{ __html: result.html }} />
+              {/* <p>{result.text}</p>
               <div>
                 <span>查看商品: </span>
                 <ol>
@@ -60,7 +62,7 @@ export default ()=> {
                     <Link href={`/product/${result.productID}`} target="_blank" className="text-blue-500 hover:text-blue-700 underline">{`/product/${result.productID}`}</Link>
                   </li>
                 </ol>
-              </div>
+              </div> */}
             </div>
           )}
         </div>

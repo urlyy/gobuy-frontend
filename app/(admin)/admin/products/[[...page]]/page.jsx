@@ -5,6 +5,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from "@/components/ui/label"
 import Pagination from '@/components/pagination'
 import apiClient from "@/lib/apiClient"
+import NewButton from "./newButton"
+import DeleteButton from "./deleteButton"
+import UpdateButton from "./updateButton"
 
 
 export default async({searchParams,params})=> {
@@ -22,19 +25,7 @@ export default async({searchParams,params})=> {
   const {products,total_count} = res.data;
   console.log(total_count)
   const totalPage = Math.ceil(total_count / productsPerPage);
-  // 处理商品创建
-  const handleCreateProduct = (event) => {
-    event.preventDefault()
-    const formData = new FormData(event.target)
-    const newProduct = {
-      id: products.length + 1,
-      name: formData.get('name'),
-      price: parseFloat(formData.get('price')),
-      description: formData.get('description'),
-    }
-    setProducts([...products, newProduct])
-    setIsDialogOpen(false)
-  }
+  
 
   // 处理商品更新
   const handleUpdateProduct = (event) => {
@@ -58,40 +49,15 @@ export default async({searchParams,params})=> {
   return (
     <div>
       <h2 className="text-2xl font-bold mb-4">商品管理</h2>
-      {/* <div className='flex gap-2'>
-        <Input
+      <div className='flex gap-2'>
+        {/* <Input
           placeholder="搜索商品..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="max-w-sm mb-4"
-        />
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="mb-4">新建商品</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>新建商品</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleCreateProduct} className="space-y-4">
-              <div>
-                <Label htmlFor="name">名称</Label>
-                <Input id="name" name="name" required />
-              </div>
-              <div>
-                <Label htmlFor="price">价格</Label>
-                <Input id="price" name="price" type="number" step="0.01" required />
-              </div>
-              <div>
-                <Label htmlFor="description">描述</Label>
-                <Input id="description" name="description" required />
-              </div>
-              <Button type="submit">新建</Button>
-            </form>
-          </DialogContent>
-        </Dialog>
-      </div> */}
-
+        /> */}
+        <NewButton/>
+        </div>
       <Table>
         <TableHeader>
           <TableRow>
@@ -114,8 +80,8 @@ export default async({searchParams,params})=> {
               <TableCell>￥{product.price.toFixed(2)}</TableCell>
               <TableCell>{product.description}</TableCell>
               <TableCell>
-                {/* <Button onClick={() => setEditingProduct(product)} className="mr-2">编辑</Button>
-                <Button onClick={() => handleDeleteProduct(product.id)} variant="destructive">删除</Button> */}
+                <UpdateButton>编辑</UpdateButton>
+                <DeleteButton variant="destructive">删除</DeleteButton>
               </TableCell>
             </TableRow>
           ))}

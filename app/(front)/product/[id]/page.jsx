@@ -3,7 +3,6 @@ import { notFound } from "next/navigation"
 import apiClient from '@/lib/apiClient';
 import AddButton from "./addButton";
 
-
 export default async function ProductPage({ params }) {
   const { id } = await params
   const res = await apiClient.get(`/product/${id}`)

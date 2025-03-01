@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button"
 import SearchInput from '@/components/productSearchInput';
 import Pagination from '@/components/pagination';
 import AgentSearch from '@/components/agentSearch';
-import ImageUploader from '@/components/imageUploader';
 import apiClient from '@/lib/apiClient';
 
 
@@ -24,7 +23,6 @@ export default async ({searchParams,params})=> {
         <div className='flex gap-2 mb-2'>
           <SearchInput currentPage={currentPage} initialSearch={search}/>
           <AgentSearch/>
-          <ImageUploader/>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {products.map((product) => (

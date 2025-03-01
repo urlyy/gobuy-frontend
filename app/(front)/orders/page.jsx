@@ -51,7 +51,7 @@ export default  async()=>{
                 <Badge className={"w-16 text-center"} variant={
                   order.status === 'Delivered' ? 'default' :
                   order.status === 'Shipped' ? 'secondary' :
-                  order.status === 1 ? 'primary' : 'destructive'
+                  order.status === 1 ? 'success' : 'destructive'
                 }>
                   {computeStatus(order.status)}
                 </Badge>

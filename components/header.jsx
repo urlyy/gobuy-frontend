@@ -1,6 +1,16 @@
+"use client"
+
 import Link from 'next/link'
 import { ShoppingCart, User, LogOut,Amphora,House,TableProperties,BadgeJapaneseYen } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+
+// const ItemsAfterLogin = ()=>{
+//   return (
+    
+//   )
+// }
+
+
 
 export function Header() {
   return (
