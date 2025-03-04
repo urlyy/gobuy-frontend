@@ -66,9 +66,7 @@ export default async({searchParams,params})=> {
               <TableCell>￥{order.total_price}</TableCell>
               <TableCell>
                 <Badge variant={
-                  order.status === 'Delivered' ? 'default' :
-                  order.status === 'Shipped' ? 'secondary' :
-                  order.status === 1 ? 'success' : 'destructive'
+                   order.status === 0 ? 'secondary' : order.status === 1 ? 'success' : 'destructive'
                 }>
                   {computeStatus(order.status)}
                 </Badge>

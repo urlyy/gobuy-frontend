@@ -56,7 +56,6 @@ export default function Cart() {
 
   const updateQuantity = async (id, newQuantity) => {
     const res = apiClient.put(`/cart/${id}`, {}, { quantity: newQuantity });
-    alert("设置购物车商品数量成功");
     const newItems = cartItems.map(item =>
       item.id === id ? { ...item, quantity: newQuantity } : item
     );

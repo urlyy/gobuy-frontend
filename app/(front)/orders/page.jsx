@@ -49,9 +49,7 @@ export default  async()=>{
                   <div className="text-sm text-muted-foreground">创建时间: {order.created_at}</div>
                 </div>
                 <Badge className={"w-16 text-center"} variant={
-                  order.status === 'Delivered' ? 'default' :
-                  order.status === 'Shipped' ? 'secondary' :
-                  order.status === 1 ? 'success' : 'destructive'
+                  order.status === 0 ? 'secondary' : order.status === 1 ? 'success' : 'destructive'
                 }>
                   {computeStatus(order.status)}
                 </Badge>

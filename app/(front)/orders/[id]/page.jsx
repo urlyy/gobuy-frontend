@@ -7,6 +7,7 @@ import apiClient from '@/lib/apiClient'
 import { computeStatus } from '@/lib/orderStatus'
 import Link from 'next/link'
 import PayButton from './payButton'
+import CountdownTimer from './countdown'
 
 export default  async({ params })=> {
   const { id } = await params
@@ -27,7 +28,8 @@ export default  async({ params })=> {
       </Link>
       <Card>
         <CardHeader>
-          <CardTitle>订单详情</CardTitle>
+          <CardTitle className="text-lg">订单详情</CardTitle>
+          {order.status === 0 && <CountdownTimer targetTime={order.created_at}/>}
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-2">
@@ -37,9 +39,7 @@ export default  async({ params })=> {
               <div>创建日期: {order.created_at}</div>
               <div>总价: ￥{order.total_price.toFixed(2)}</div>
               <div>状态: <Badge variant={
-                  order.status === 'Delivered' ? 'default' :
-                  order.status === 'Shipped' ? 'secondary' :
-                  order.status === 1 ? 'success' : 'destructive'
+                   order.status === 0 ? 'secondary' : order.status === 1 ? 'success' : 'destructive'
                 }>{computeStatus(order.status)}</Badge></div>
               {order.status === 2 && <div>支付方式: 支付宝</div>}
             </div>
