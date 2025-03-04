@@ -27,7 +27,7 @@ export function LoginForm({
       const res = await apiClient.post("/login",{email,password})
       const {username,access_token} = res.data;
       localStorage.setItem("username", username)
-      document.cookie = `Authorization=Bearer ${access_token}; Secure; SameSite=Strict; Path=/; Domain=${window.location.hostname}`;
+      document.cookie = `Authorization=Bearer ${access_token}; Path=/;`;
       router.push("/")
   }
   return (
